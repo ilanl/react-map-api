@@ -185,6 +185,23 @@ We'll use facebook create react app to kick-start the app.
 
 Follow these steps: https://github.com/facebook/create-react-app
 
+## Context, Reducers, State
+
+While I used in the past [React Redux](https://redux.js.org/basics/usage-with-react/), I decided to check how React Context API would help me reduce my code significantly. You can read me about React-Context [here] (https://reactjs.org/docs/context.html).
+
+## Components
+
+We'll have the following components:
+
+1. View
+2. List
+3. ItemDetails
+4. EditForm
+5. AddForm
+6. Map
+
+NB: While useContext hook is great, it's not recommended to put everything in the global context.
+
 # Instructions
 
 Don't forget to replace the ```GOOGLE_MAP_API_KEY = '<YOUR API KEY>'``` with your own **GOOGLE_MAP_API_KEY**
@@ -196,12 +213,6 @@ Go to api directory:
 ```npm start```
 
 Same to run the app from app directory.
-
-
-
-
-
-
 
 
 
