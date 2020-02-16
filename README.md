@@ -12,6 +12,12 @@ No login is required, the webapp should open directly on the main page.
 The list of locations is shared, that means:
 Everyone who opens the webapp should see the same locations.
 
+GoogleMap API Key
+
+Instruction on how to generate an API Key can be found here:
+
+https://developers.google.com/maps/documentation/javascript/adding-a-google-map#key
+
 ![PrintScreen](/git-map.png)
 
 
