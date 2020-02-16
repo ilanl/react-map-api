@@ -1,10 +1,16 @@
 
-- In-Memory (DB - to be replaced)
-- Local RESTFul API
-- Create React App
-- Socket.io for real-time updates
+Google group map
 
-- Google Map API
+Your mission, should you choose to accept it, is to create a webapp to manage
+and display a shared pool of locations on a map.
+Feel free to use any library or framework, as you see fit.
+
+Requirements
+The webapp should have a single page: A map component and the list of
+locations next to it.
+No login is required, the webapp should open directly on the main page.
+The list of locations is shared, that means:
+Everyone who opens the webapp should see the same locations.
 
 ![PrintScreen](/git-map.png)
 
