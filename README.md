@@ -38,9 +38,7 @@ interface ILocation {
   latitude: number,
   longitude: number
 }
-```
 
-```
 class LocationModel implements ILocation {
   id: string;
   name: string;
@@ -70,7 +68,6 @@ class Service {
 2. Get Locations
 
 ```
-  ...
   public async getAll(): Promise<ILocation[]> {
     return new Promise((resolve) => {
       console.log('get all', this.db);
@@ -81,7 +78,6 @@ class Service {
 
 3. Add Location
 ```
-  ...
   public async add(entity: ILocation): Promise<ILocation> {
     let { name, latitude, longitude } = entity;
     let newModel = new EntityModel(uuid(), name, latitude, longitude)
@@ -94,7 +90,6 @@ class Service {
 4. Update Location
 
 ```
-  ...
   public async update(id: string, entity: ILocation): Promise<ILocation> {
       return new Promise((resolve, reject) => {
         let existing = this.db.filter((entity) => entity.id === id)[0];
@@ -111,7 +106,6 @@ class Service {
 5. Delete Location
 
 ```
-...
   public async delete(id: string): Promise<boolean> {
     return new Promise((resolve) => {
       this.db = this.db.filter((entity) => entity.id !== id);
@@ -121,17 +115,49 @@ class Service {
   }
 ```
 
-## Express REST API
+## Controllers
 
-The server will contain the following entities:
+I'm using inline controllers, since there's not much logic here.
+
+After each add, update, delete operations we'll also send a broadcast message to update all clients via web socket
 
 
-1. server: starts app (express & socket)
-2. routes
+```
+    this.app.route(this.ROUTE).post(async (req: Request, res: Response) => { 
+      let { name, latitude, longitude } = req.body;
+      let added = await this.service.add({name, latitude, longitude});
+      res.json(added);
+      this.pushData();
+    });
+```
 
-We use Express to setup a server, while separating the App (Express) from the Server.
-The Server will instanciate the AppServer with Express and SocketIO. 
-I'm using an in memory DB for the sake of the exercise.
+## Socket Server
+
+When initializing the server, the socket is configured. Since we have no login we'll simply register the connected socket to a channel where all the data will be updated realtime after receiving a custom message from client, for example: <em>ready</em>.
+
+```
+private setUpSocket() {
+
+    this.io.on("connection", function(socket: any) {
+      socket.on('error', (error: Error) => {
+        console.error('socket error', error)
+      })
+      
+      socket.on('ready', () => {
+        socket.join(`channel/push`);
+      })
+    });
+  }
+```
+
+After each update operation, server will push a message to relevant clients: 
+
+```
+private async pushData() {
+    let items = await this.service.getAll();
+    this.io.sockets.in('channel/push').emit('push', { type: 'PUSH', data: items} );
+  }
+```
 
 ## Testing via Postman
 
@@ -151,10 +177,17 @@ I'm using an in memory DB for the sake of the exercise.
 
 ![DELETE](/images/delete.png)
 
+# Client
 
-# How to run
+## Create React App
 
-Replace the ```GOOGLE_MAP_API_KEY = '<YOUR API KEY>'``` with your own **GOOGLE_MAP_API_KEY**
+We'll use facebook create react app to kick-start the app.
+
+Follow these steps: https://github.com/facebook/create-react-app
+
+# Instructions
+
+Don't forget to replace the ```GOOGLE_MAP_API_KEY = '<YOUR API KEY>'``` with your own **GOOGLE_MAP_API_KEY**
 
 Go to api directory:
 
